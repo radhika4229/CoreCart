@@ -1,165 +1,63 @@
-CoreCart is a backend e-commerce application built using Spring Boot.
-It implements JWT-based authentication, role-based authorization, and complete cart-to-order workflow following real-world backend design practices.
+🛒 CoreCart – Spring Boot E-Commerce Backend
 
-This project focuses on backend architecture, security, and data integrity rather than UI.
+CoreCart is a Spring Boot backend e-commerce application implementing JWT authentication, role-based authorization, and a complete cart-to-order workflow.
+
+The project focuses on backend architecture, security, and data integrity, not UI.
 
 🚀 Features
 
-User Registration & Login (JWT Authentication)
+JWT-based User Authentication
 
-Role-Based Authorization (ADMIN, USER)
+Role-Based Access Control (ADMIN, USER)
 
-Product Management (Admin only)
+Product & Image Management (Admin)
 
-Product Image Association
+Cart Management & Order Placement (User)
 
-Cart Management (User only)
+Secure APIs with Spring Security
 
-Order Placement
-
-Secure API access using Spring Security
-
-PostgreSQL database integration
+PostgreSQL Integration
 
 🛠 Tech Stack
 
-Language: Java
+Java · Spring Boot · Spring Security · JWT · JPA (Hibernate) · PostgreSQL · Maven · Postman
 
-Framework: Spring Boot
+🔐 Roles
 
-Security: Spring Security + JWT
+ADMIN: Manage products and images
+USER: Manage cart and place orders
 
-ORM: Spring Data JPA (Hibernate)
+Unauthorized access is restricted using JWT and Spring Security.
 
-Database: PostgreSQL
+🔄 Flow
 
-Build Tool: Maven
+Login → JWT Token → Product Management (Admin) → Cart (User) → Order Placement
 
-API Testing: Postman
+🗂 Database
 
-🔐 Roles & Access Control
-ADMIN
+Entities: User, Role, Product, Image, Cart, CartItem, Order, OrderItem
+📌 ER Diagram: /docs/ERD.png
 
-Add / update / delete products
+📸 API Documentation
 
-Upload product images
+All APIs are verified using Postman screenshots.
 
-USER
-
-Add products to cart
-
-View cart
-
-Place orders
-
-Unauthorized access is restricted using Spring Security and JWT tokens.
-
-🔄 Application Flow
-
-User registers or logs in
-
-JWT token is generated on successful login
-
-ADMIN manages products and images
-
-USER adds products to cart
-
-USER places order
-
-Order data is stored with order items for history tracking
-
-🗂 Database Design
-
-The database is designed using proper normalization and relationships.
-
-Main entities:
-
-User
-
-Role
-
-Product
-
-Image
-
-Cart
-
-CartItem
-
-Order
-
-OrderItem
-
-Each entity is connected using primary and foreign keys to maintain referential integrity.
-
-📌 ER Diagram:
-See /docs/ERD.png
-
-📸 API Documentation (Screenshots)
-
-API functionality is documented using Postman screenshots to verify that all endpoints work correctly.
-
-⚙️ Setup Instructions
-1️⃣ Clone Repository
+⚙️ Run Locally
 git clone <repository-url>
 cd CoreCart
-
-2️⃣ Configure Database
-
-Create a PostgreSQL database:
-
-corecart
-
-
-Update application.properties:
-
-spring.datasource.url
-spring.datasource.username
-spring.datasource.password
-
-3️⃣ Run Application
 mvn spring-boot:run
 
 
-Server runs at:
+Server: http://localhost:8080
 
-http://localhost:8080
-
-🧪 API Testing Checklist
-
-Authentication validation
-
-Role-based access control
-
-Product CRUD (Admin)
-
-Cart operations (User)
-
-Order placement
-
-Negative test cases (403, 404, 401)
-
-📁 Project Structure
+📁 Structure
 CoreCart/
  ├─ src/
  ├─ pom.xml
- ├─ README.md
  ├─ postman/
- ├─ docs/
- │   └─ ERD.png
+ └─ docs/
 
-📌 Notes
-
-JWT token is required for all protected endpoints
-
-Admin and User roles are strictly enforced
-
-Order items store snapshot data to preserve order history
-
-The project is extensible for future modules like payments and shipping
-
-
+👤 Author
 
 Radhika Sishodiya
-Computer Science Engineering Student
-Backend Development (Java | Spring Boot)
+Backend Developer (Java | Spring Boot)
