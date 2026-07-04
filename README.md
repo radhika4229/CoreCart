@@ -1,225 +1,163 @@
-🛒 CoreCart – Spring Boot E-Commerce Backend
+# 🛒 CoreCart — Spring Boot E-Commerce Backend
 
-CoreCart is a Spring Boot backend e-commerce application implementing JWT authentication, role-based authorization, and a complete cart-to-order workflow.
+A backend REST API for an e-commerce platform built with Java and Spring Boot.  
+Covers secure authentication, role-based access control, and a complete cart-to-order workflow.
 
-The project focuses on backend architecture, security, and data integrity, not UI.
+---
 
-🚀 Features
+## ✨ Features
 
-JWT-based User Authentication
+### Authentication & Security
+- JWT-based stateless authentication
+- Role-based access control — `ADMIN` (manage products) and `USER` (cart & orders)
+- Password encryption with BCrypt
+- Spring Security 6 with custom filter chain
 
-Role-Based Access Control (ADMIN, USER)
+### Product Management (Admin)
+- Create, update, and delete products
+- Fetch all products with basic filtering
 
-Product & Image Management (Admin)
+### Shopping Cart & Orders (User)
+- Add and remove items from cart
+- Place orders from cart
+- View order history
 
-Cart Management & Order Placement (User)
+---
 
-Secure APIs with Spring Security
+## 🛠 Tech Stack
 
-PostgreSQL Integration
+| Layer | Technology |
+|---|---|
+| Language | Java 21 |
+| Framework | Spring Boot 3, Spring Security 6 |
+| ORM | Spring Data JPA, Hibernate |
+| Database | PostgreSQL |
+| Build Tool | Maven |
+| API Testing | Postman |
 
-🛠 Tech Stack
+---
 
-Java · Spring Boot · Spring Security · JWT · JPA (Hibernate) · PostgreSQL · Maven · Postman
+## 🚀 Running Locally
 
-🔐 Roles
+### Prerequisites
+- Java 21+
+- PostgreSQL running locally
+- Maven 3.8+
 
-ADMIN: Manage products and images
-USER: Manage cart and place orders
+### Steps
 
-Unauthorized access is restricted using JWT and Spring Security.
-
-🔄 Flow
-
-Login → JWT Token → Product Management (Admin) → Cart (User) → Order Placement
-
-🗂 Database
-
-Entities: User, Role, Product, Image, Cart, CartItem, Order, OrderItem
-📌 ER Diagram: /docs/ERD.png
-
-📸 API Documentation
-
-All APIs are verified using Postman screenshots.
-
-⚙️ Run Locally
-git clone <repository-url>
+```bash
+git clone https://github.com/radhika4229/CoreCart.git
 cd CoreCart
-mvn spring-boot:run
+```
 
+Create a PostgreSQL database:
 
-Server: http://localhost:8080
-
-📁 Structure
-CoreCart/
- ├─ src/
- ├─ pom.xml
- ├─ postman/
- └─ docs/
-
-2. Database Setup
-Copy-- Create database
+```sql
 CREATE DATABASE corecart_db;
+```
 
--- Create user (optional, recommended for security)
-CREATE USER corecart_user WITH PASSWORD 'your_secure_password';
-GRANT ALL PRIVILEGES ON DATABASE corecart_db TO corecart_user;
-3. Configure Environment Variables
-Copycp .env.example .env
-Edit .env:
+Update `src/main/resources/application.properties`:
 
-Copy# Database
+```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/corecart_db
-spring.datasource.username=postgres
-spring.datasource.password=your_password
+spring.datasource.username=your_postgres_username
+spring.datasource.password=your_postgres_password
 spring.jpa.hibernate.ddl-auto=update
 
-# JWT
-jwt.secret=your-super-secret-key-minimum-256-bits-use-strong-random-string
-jwt.expiration=3600000  # 1 hour
+jwt.secret=your-secret-key-minimum-32-characters
+jwt.expiration=3600000
+```
 
-# Server
-server.port=8080
-4. Run Application
-Copymvn spring-boot:run
-Server starts at http://localhost:8080
+Run the application:
 
-📚 API Documentation
-Authentication
-Register User
+```bash
+mvn spring-boot:run
+```
 
-POST /api/auth/register
-Content-Type: application/json
+Server starts at `http://localhost:8080`
 
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "SecurePass123!",
-  "role": "USER"
-}
+---
 
-Response: 201 Created
-{
-  "id": 1,
-  "email": "john@example.com",
-  "role": "USER",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-Login
+## 📚 API Endpoints
 
-POST /api/auth/login
-{
-  "email": "john@example.com",
-  "password": "SecurePass123!"
-}
+Full Postman collection is available in the `/postman` folder.
 
-Response: 200 OK
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refreshToken": "..."
-}
-Products (Admin Only)
-Create Product
+### Auth
 
-POST /api/admin/products
-Authorization: Bearer {token}
-Content-Type: application/json
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/api/auth/register` | Public | Register new user |
+| POST | `/api/auth/login` | Public | Login, returns JWT |
 
-{
-  "name": "Laptop",
-  "description": "High-performance laptop",
-  "price": 999.99,
-  "stock": 50
-}
+### Products
 
-Response: 201 Created
-Get All Products
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/api/products` | Public | Get all products |
+| POST | `/api/admin/products` | ADMIN | Create product |
+| PUT | `/api/admin/products/{id}` | ADMIN | Update product |
+| DELETE | `/api/admin/products/{id}` | ADMIN | Delete product |
 
-GET /api/products
-Response: 200 OK
-[
-  {
-    "id": 1,
-    "name": "Laptop",
-    "price": 999.99,
-    "stock": 50
-  }
-]
-Cart & Orders (User)
-Add to Cart
+### Cart
 
-POST /api/cart/items
-Authorization: Bearer {token}
-{
-  "productId": 1,
-  "quantity": 2
-}
-Place Order
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/api/cart` | USER | View cart |
+| POST | `/api/cart/items` | USER | Add item to cart |
+| DELETE | `/api/cart/items/{id}` | USER | Remove item |
 
-POST /api/orders
-Authorization: Bearer {token}
-{
-  "shippingAddress": "123 Main St, City, Country",
-  "paymentMethod": "CARD"
-}
+### Orders
 
-Response: 201 Created
-{
-  "orderId": "ORD-2026-001",
-  "totalAmount": 1999.98,
-  "status": "PENDING"
-}
-Get Order History
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/api/orders` | USER | Place order from cart |
+| GET | `/api/orders` | USER | View order history |
 
-GET /api/orders
-Authorization: Bearer {token}
-Response: 200 OK
-[
-  {
-    "orderId": "ORD-2026-001",
-    "orderDate": "2026-02-06T20:00:00Z",
-    "totalAmount": 1999.98,
-    "status": "COMPLETED"
-  }
-]
-For complete Postman collection, see /postman/CoreCart_API.postman_collection.json
+---
 
-📊 Database Schema
-Users Table
-CopyCREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL DEFAULT 'USER',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-Products Table
-CopyCREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  price DECIMAL(10, 2) NOT NULL,
-  stock INT NOT NULL,
-  image_url VARCHAR(500),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-Orders Table
-CopyCREATE TABLE orders (
-  id SERIAL PRIMARY KEY,
-  user_id INT NOT NULL,
-  order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  total_amount DECIMAL(10, 2),
-  shipping_address VARCHAR(500),
-  status VARCHAR(50) DEFAULT 'PENDING',
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-(Full ER Diagram in /docs/ERD.png)
+## 📁 Project Structure
 
-🧪 Testing
-Run unit tests:
+```
+CoreCart/
+├── src/
+│   └── main/
+│       ├── java/com/corecart/
+│       │   ├── controller/       # REST endpoints
+│       │   ├── service/          # Business logic
+│       │   ├── repository/       # Data access layer
+│       │   ├── entity/           # JPA entities
+│       │   ├── dto/              # Request/Response objects
+│       │   ├── security/         # JWT filter, config
+│       │   └── exception/        # Global exception handling
+│       └── resources/
+│           └── application.properties
+├── postman/
+│   └── CoreCart_API.postman_collection.json
+├── pom.xml
+└── README.md
+```
 
-Copymvn test
-Run integration tests:
+---
 
-Copymvn verify
+## 🔍 Key Implementation Details
+
+- **JWT filter** intercepts every request, validates token, sets SecurityContext
+- **DTO pattern** — entities never exposed directly in API responses
+- **Global exception handler** with `@ControllerAdvice` returns consistent error structure
+- **5 JPA entities** — User, Product, Cart, CartItem, Order — with proper relationships and cascade rules
+- **Normalised PostgreSQL schema** — foreign keys, no data duplication
+
+---
+
+## 📬 API Testing
+
+Import the Postman collection from `/postman/CoreCart_API.postman_collection.json`  
+to test all endpoints with pre-configured headers and sample request bodies.
+
+---
+
+## 👩‍💻 Author
+
+**Radhika Sishodiya**  
+[GitHub](https://github.com/radhika4229) · [LinkedIn](https://linkedin.com/in/radhika-sishodiya) · sishodiyaradhika@gmail.com
